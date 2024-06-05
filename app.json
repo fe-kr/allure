@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Aora",
-    "slug": "Aora",
+    "name": "Allure",
+    "slug": "Allure",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "Aora",
+    "scheme": "Allure",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
