@@ -88,3 +88,9 @@ export const getLatestPosts = () => databases.listDocuments(
   process.env.APPWRITE_VIDEO_COLLECTION_ID!,
   [Query.orderDesc("$createdAt"), Query.limit(10)]
 ).then(({ documents }) => documents);
+
+export const findPostsByParams = (searchValue: string) => databases.listDocuments(
+  process.env.APPWRITE_DATABASE_ID!,
+  process.env.APPWRITE_VIDEO_COLLECTION_ID!,
+  [Query.search("title", searchValue)]
+).then((posts) => posts?.documents || []);

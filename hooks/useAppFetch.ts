@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useToast } from "react-native-toast-notifications";
 
-const useAppFetch = (callback: Function) => {
+const useAppFetch = (callback: Function, isTurnedOff: boolean = false) => {
   const toast = useToast();
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchData = async () => {
+  const fetchData = async (...args: any[]) => {
     setIsLoading(true);
 
     try {
-      const res = await callback();
+      const res = await callback(...args);
 
       setData(res);
     } catch (error) {
@@ -21,7 +21,9 @@ const useAppFetch = (callback: Function) => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (!isTurnedOff) {
+      fetchData();
+    }
   }, []);
 
   return { data, isLoading, fetchData };

@@ -14,7 +14,7 @@ const SearchInput = ({ initialValue }: SearchInputProps) => {
 
   const onSearchValue = () => {
     if (pathname.startsWith("/search")) {
-      return router.setParams({ query: searchValue });
+      return router.setParams({ searchValue });
     }
     
     return router.push(`/search/${searchValue}`);
