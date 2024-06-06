@@ -14,12 +14,12 @@ const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setCurrentUser } = useUserContext();
 
-  const onChangeText = (e: { name: string; value: string }) => {
+  const onChangeText = (e: Record<string, string>) => {
     setForm((prevState) => ({ ...prevState, [e.name]: e.value }));
   };
 
   const onSubmit = async () => {
-    if (!form.email || !form.password) {
+    if (!Object.values(form).every(Boolean)) {
       toast.show("Please fill in all fields", { type: "warning" });
     }
 
@@ -62,7 +62,7 @@ const SignIn = () => {
             title="Email"
             name="email"
             value={form.email}
-            handleChangeText={onChangeText}
+            onChangeText={onChangeText}
             containerStyles="mt-7"
             keyboardType="email-address"
           />
@@ -72,7 +72,7 @@ const SignIn = () => {
             name="password"
             type="password"
             value={form.password}
-            handleChangeText={onChangeText}
+            onChangeText={onChangeText}
             containerStyles="mt-7"
           />
 

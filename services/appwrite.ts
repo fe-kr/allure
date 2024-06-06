@@ -1,10 +1,13 @@
+import { UploadFileType } from "@/constants/enums";
 import {
   Account,
   Avatars,
   Client,
   Databases,
+  Storage,
   ID,
   Query,
+  ImageGravity,
 } from "react-native-appwrite";
 
 const client = new Client();
@@ -15,6 +18,7 @@ client
   .setPlatform(process.env.APPWRITE_PLATFORM!);
 
 const account = new Account(client);
+const storage = new Storage(client);
 const avatars = new Avatars(client);
 const databases = new Databases(client);
 
@@ -54,6 +58,16 @@ export const createUser = async ({ email, password, username }) => {
   }
 };
 
+export const uploadFile = async ({ file, type }) => {
+  const uploadedFile = await storage.createFile(
+    process.env.APPWRITE_STORAGE_ID!,
+    ID.unique(),
+    file
+  );
+
+  return getFilePreview({ id: uploadedFile.$id, type });
+};
+
 export const getCurrentUser = async () => {
   try {
     const currentAccount = await getAccount();
@@ -78,25 +92,81 @@ export const getCurrentUser = async () => {
   }
 };
 
-export const getAllPosts = () => databases.listDocuments(
-  process.env.APPWRITE_DATABASE_ID!,
-  process.env.APPWRITE_VIDEO_COLLECTION_ID!,
-);
+export const getFilePreview = async ({ id, type }) => {
+  switch (type) {
+    case UploadFileType.VIDEO:
+      return storage.getFileView(process.env.APPWRITE_STORAGE_ID!, id);
 
-export const getUserPosts = (userId: string) => databases.listDocuments(
-  process.env.APPWRITE_DATABASE_ID!,
-  process.env.APPWRITE_VIDEO_COLLECTION_ID!,
-  [Query.equal("creator", userId)]
-).then(({ documents }) => documents);
+    case UploadFileType.IMAGE:
+      return storage.getFilePreview(
+        process.env.APPWRITE_STORAGE_ID!,
+        id,
+        2000,
+        2000,
+        ImageGravity.Top,
+        100
+      );
 
-export const getLatestPosts = () => databases.listDocuments(
-  process.env.APPWRITE_DATABASE_ID!,
-  process.env.APPWRITE_VIDEO_COLLECTION_ID!,
-  [Query.orderDesc("$createdAt"), Query.limit(10)]
-).then(({ documents }) => documents);
+      default:
+        throw new Error("Invalid file type");
+  }
+};
 
-export const findPostsByParams = (searchValue: string) => databases.listDocuments(
-  process.env.APPWRITE_DATABASE_ID!,
-  process.env.APPWRITE_VIDEO_COLLECTION_ID!,
-  [Query.search("title", searchValue)]
-).then(({ documents }) => documents);
+export const createVideoPost = async ({
+  title,
+  thumbnail,
+  video,
+  prompt,
+  userId,
+}) => {
+  const [thumbnailUrl, videoUrl] = await Promise.all([
+    uploadFile({ file: thumbnail, type: UploadFileType.IMAGE }),
+    uploadFile({ file: video, type: UploadFileType.VIDEO }),
+  ]);
+
+  return databases.createDocument(
+    process.env.APPWRITE_DATABASE_ID!,
+    process.env.APPWRITE_VIDEO_COLLECTION_ID!,
+    ID.unique(),
+    {
+      title,
+      prompt,
+      thumbnail: thumbnailUrl,
+      video: videoUrl,
+      creator: userId,
+    }
+  );
+};
+
+export const getAllPosts = () =>
+  databases.listDocuments(
+    process.env.APPWRITE_DATABASE_ID!,
+    process.env.APPWRITE_VIDEO_COLLECTION_ID!
+  );
+
+export const getUserPosts = (userId: string) =>
+  databases
+    .listDocuments(
+      process.env.APPWRITE_DATABASE_ID!,
+      process.env.APPWRITE_VIDEO_COLLECTION_ID!,
+      [Query.equal("creator", userId)]
+    )
+    .then(({ documents }) => documents);
+
+export const getLatestPosts = () =>
+  databases
+    .listDocuments(
+      process.env.APPWRITE_DATABASE_ID!,
+      process.env.APPWRITE_VIDEO_COLLECTION_ID!,
+      [Query.orderDesc("$createdAt"), Query.limit(10)]
+    )
+    .then(({ documents }) => documents);
+
+export const findPostsByParams = (searchValue: string) =>
+  databases
+    .listDocuments(
+      process.env.APPWRITE_DATABASE_ID!,
+      process.env.APPWRITE_VIDEO_COLLECTION_ID!,
+      [Query.search("title", searchValue)]
+    )
+    .then(({ documents }) => documents);

@@ -14,7 +14,7 @@ type FormFieldProps = {
   value: string;
   name: string;
   placeholder?: string;
-  handleChangeText: ({ name, value }: { name: string; value: string }) => void;
+  onChangeText: (e: Record<string, string>) => void;
   containerStyles: string;
 } & TextInputProps;
 
@@ -24,16 +24,18 @@ const FormField = ({
   value,
   name,
   placeholder,
-  handleChangeText,
+  onChangeText,
   containerStyles,
   ...props
 }: FormFieldProps) => {
   const isPasswordField = type === FormFieldType.PASSWORD;
   const [showPassword, setShowPassword] = useState(false);
 
-  const onPasswordIconPress = () => setShowPassword((prevState) => !prevState);
-  const onChangeText = (value: string) => {
-    handleChangeText({ name, value })
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState)
+  };
+  const handleChangeText = (value: string) => {
+    onChangeText({ name, value })
   };
 
   return (
@@ -46,13 +48,13 @@ const FormField = ({
           value={value}
           placeholder={placeholder}
           placeholderTextColor="#7B7B8B"
-          onChangeText={onChangeText}
+          onChangeText={handleChangeText}
           secureTextEntry={isPasswordField && !showPassword}
           {...props}
         />
 
         {isPasswordField && (
-          <TouchableOpacity onPress={onPasswordIconPress}>
+          <TouchableOpacity onPress={togglePasswordVisibility}>
             <Image
               source={!showPassword ? visibilityIcon : visibilityOffIcon}
               className="w-6 h-6"
