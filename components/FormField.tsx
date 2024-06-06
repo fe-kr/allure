@@ -1,18 +1,16 @@
 import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, TextInputProps } from "react-native";
-import { useToast } from "react-native-toast-notifications";
-
 import { visibilityIcon, visibilityOffIcon } from "@/assets/icons";
 import clsx from "clsx";
 
 const FormFieldType = {
-  TEXT: "TEXT",
-  PASSWORD: "PASSWORD",
+  TEXT: "text",
+  PASSWORD: "password",
 };
 
 type FormFieldProps = {
   title: string;
-  type: FormFieldType.PASSWORD | FormFieldType.TEXT;
+  type: FormFieldType.TEXT | FormFieldType.PASSWORD;
   value: string;
   name: string;
   placeholder?: string;

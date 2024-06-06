@@ -1,7 +1,7 @@
 import { SplashScreen, Stack } from "expo-router";
 import { ToastProvider } from "react-native-toast-notifications";
 import useFonts from "@/hooks/useFonts";
-import { GlobalProvider } from "@/hooks/useGlobalContext";
+import { UserProvider } from "@/hooks/useUserContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,14 +14,14 @@ const RootLayout = () => {
 
   return (
     <ToastProvider placement="top" duration={3000}>
-      <GlobalProvider>
+      <UserProvider>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="(auth)" />
           <Stack.Screen name="index" />
           <Stack.Screen name="search/[query]" />
         </Stack>
-      </GlobalProvider>
+      </UserProvider>
     </ToastProvider>
   );
 };

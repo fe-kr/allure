@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { Text, View } from "react-native";
 import { SvgUri } from 'react-native-svg';
 
@@ -18,7 +19,7 @@ const TabIcon = ({ iconUri, color, name, focused }: TabIconProps) => {
         height={6}
       />
       <Text
-        className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
+        className={clsx(focused ? "font-rs-semibold" : "font-rs-regular", 'text-xs')}
         style={{ color }}
       >
         {name}

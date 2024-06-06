@@ -18,4 +18,5 @@ web-build/
 .vscode
 expo-env.d.ts
 nativewind-env.d.ts
+.env
 # @end expo-cli

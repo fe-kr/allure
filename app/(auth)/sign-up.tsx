@@ -1,37 +1,39 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+import { View, Text, ScrollView, Dimensions, Image } from "react-native";
 import { CustomButton, FormField } from "@/components";
 import { logoImage } from "@/assets/images";
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { useToast } from "react-native-toast-notifications";
+import useUserContext from "@/hooks/useUserContext";
+import { getCurrentUser, signIn } from "@/services/appwrite";
 
 const SignUp = () => {
   const toast = useToast();
-  const [form, setForm] = useState({ email: '', password: '', userName: '' });
+  const [form, setForm] = useState({ email: "", password: "", username: "" });
   const [isLoading, setIsLoading] = useState(false);
+  const { setCurrentUser } = useUserContext();
 
   const onChangeText = (e: { name: string; value: string }) => {
-    setForm((prevState) => ({ ...prevState, [e.name]: e.value }))
-  }
+    setForm((prevState) => ({ ...prevState, [e.name]: e.value }));
+  };
 
   const onSubmit = async () => {
-    if (!form.email || !form.password) {
-      toast.show("Please fill in all fields", { type: 'warning' });
+    if (!form.email || !form.password || !form.username) {
+      toast.show("Please fill in all fields", { type: "warning" });
     }
 
     setIsLoading(true);
 
     try {
-      await signIn(form.email, form.password);
-      const result = await getCurrentUser();
-      setUser(result);
-      setIsLogged(true);
+      await signIn({ email: form.email, password: form.password });
+      const currentUser = await getCurrentUser();
+      setCurrentUser(currentUser);
 
-      toast.show("User signed in successfully", { type: 'success' });
+      toast.show("User signed in successfully", { type: "success" });
       router.replace("/home");
     } catch (error) {
-      toast.show(error.message, { type: 'danger' });
+      toast.show((error as Error).message, { type: "danger" });
     } finally {
       setIsLoading(false);
     }
@@ -58,8 +60,8 @@ const SignUp = () => {
 
           <FormField
             title="User Name"
-            name="userName"
-            value={form.userName}
+            name="username"
+            value={form.username}
             handleChangeText={onChangeText}
             containerStyles="mt-7"
           />
@@ -91,7 +93,7 @@ const SignUp = () => {
 
           <View className="flex justify-center pt-5 flex-row gap-2">
             <Text className="text-lg text-gray-100 font-rs-regular">
-            Have an account already?
+              Have an account already?
             </Text>
             <Link
               href="/sign-in"
