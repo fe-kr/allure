@@ -5,3 +5,4 @@ export { default as VideoCard } from './VideoCard';
 export { default as SearchInput } from './SearchInput';
 export { default as EmptyPlaceholder } from './EmptyPlaceholder';
 export { default as TrendingPosts } from './TrendingPosts';
+export { default as TextBox } from './TextBox';

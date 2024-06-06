@@ -7,3 +7,5 @@ export { default as personIcon } from './person.svg';
 export { default as menuIcon } from './more_vert.svg';
 export { default as playIcon } from './play_arrow.svg';
 export { default as searchIcon } from './search.svg';
+export { default as logoutIcon } from './logout.svg';
+ 

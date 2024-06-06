@@ -83,6 +83,12 @@ export const getAllPosts = () => databases.listDocuments(
   process.env.APPWRITE_VIDEO_COLLECTION_ID!,
 );
 
+export const getUserPosts = (userId: string) => databases.listDocuments(
+  process.env.APPWRITE_DATABASE_ID!,
+  process.env.APPWRITE_VIDEO_COLLECTION_ID!,
+  [Query.equal("creator", userId)]
+).then(({ documents }) => documents);
+
 export const getLatestPosts = () => databases.listDocuments(
   process.env.APPWRITE_DATABASE_ID!,
   process.env.APPWRITE_VIDEO_COLLECTION_ID!,
@@ -93,4 +99,4 @@ export const findPostsByParams = (searchValue: string) => databases.listDocument
   process.env.APPWRITE_DATABASE_ID!,
   process.env.APPWRITE_VIDEO_COLLECTION_ID!,
   [Query.search("title", searchValue)]
-).then((posts) => posts?.documents || []);
+).then(({ documents }) => documents);
