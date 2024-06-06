@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Link, router } from "expo-router";
 import { useToast } from "react-native-toast-notifications";
 import useUserContext from "@/hooks/useUserContext";
-import { getCurrentUser, signIn } from "@/services/appwrite";
+import apiClient from "@/services/apiClient";
 
 const SignUp = () => {
   const toast = useToast();
@@ -26,8 +26,7 @@ const SignUp = () => {
     setIsLoading(true);
 
     try {
-      await signIn({ email: form.email, password: form.password });
-      const currentUser = await getCurrentUser();
+      const currentUser = await apiClient.signIn({ email: form.email, password: form.password });
       setCurrentUser(currentUser);
 
       toast.show("User signed in successfully", { type: "success" });

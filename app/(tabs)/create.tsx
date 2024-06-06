@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 
 import { uploadIcon } from "@/assets/icons";
-import { createVideoPost } from "@/services/appwrite";
+import apiClient from "@/services/apiClient";
 import { CustomButton, FormField } from "@/components";
 import useUserContext from "@/hooks/useUserContext";
 import {
@@ -78,7 +78,7 @@ const CreateVideo = () => {
     setIsUploading(true);
 
     try {
-      await createVideoPost({ ...form, userId: currentUser?.$id });
+      await apiClient.createVideoPost({ ...form, creatorId: currentUser?.$id });
 
       toast.show("Post uploaded successfully", { type: "success" });
 

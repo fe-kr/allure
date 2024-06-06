@@ -1,5 +1,5 @@
 const Bookmark = () => {
-    return (  );
+    return (<></>);
 }
  
 export default Bookmark;

@@ -2,15 +2,15 @@ import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, Image, RefreshControl, Text, View } from "react-native";
 import { logoImage } from "@/assets/images";
-import { getAllPosts, getLatestPosts } from "@/services/appwrite";
+import apiClient from "@/services/apiClient";
 import { EmptyPlaceholder, SearchInput, TrendingPosts, VideoCard } from "@/components";
 import useAppFetch from "@/hooks/useAppFetch";
 import useUserContext from "@/hooks/useUserContext";
 
 const Home = () => {
   const { currentUser } = useUserContext();
-  const { data: posts, fetchData: fetchPosts } = useAppFetch(getAllPosts);
-  const { data: latestPosts } = useAppFetch(getLatestPosts);
+  const { data: posts, fetchData: fetchPosts } = useAppFetch(() => apiClient.getAllPosts());
+  const { data: latestPosts } = useAppFetch(() => apiClient.getLatestPosts());
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 

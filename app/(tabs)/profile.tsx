@@ -4,16 +4,16 @@ import { View, Image, FlatList, TouchableOpacity } from "react-native";
 
 import { logoutIcon } from "@/assets/icons";
 import useAppFetch from "@/hooks/useAppFetch";
-import { getUserPosts, signOut } from "@/services/appwrite";
+import apiClient from "@/services/apiClient";
 import useUserContext from "@/hooks/useUserContext";
 import { EmptyPlaceholder, TextBox, VideoCard } from "@/components";
 
 const Profile = () => {
   const { currentUser, setCurrentUser } = useUserContext();
-  const { data: posts } = useAppFetch(() => getUserPosts(currentUser?.$id));
+  const { data: posts } = useAppFetch(() => apiClient.getUserPosts(currentUser?.$id));
 
   const onLogout = async () => {
-    await signOut();
+    await apiClient.signOut();
     setCurrentUser(null);
 
     router.replace("/sign-in");
