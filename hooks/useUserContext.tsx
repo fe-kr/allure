@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 
-import { getCurrentUser } from "@/services/appwrite";
+import apiClient from "@/services/apiClient";
 
 interface UserContext {
   currentUser: object | null;
@@ -32,7 +32,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   useEffect(() => {
     setIsLoading(true);
 
-    getCurrentUser()
+    apiClient.getCurrentUser()
       .then(setCurrentUser)
       .catch(Error)
       .finally(() => setIsLoading(false));

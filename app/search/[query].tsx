@@ -4,12 +4,12 @@ import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import useAppFetch from "@/hooks/useAppFetch";
-import { findPostsByParams } from "@/services/appwrite";
+import apiClient from "@/services/apiClient";
 import { EmptyPlaceholder, SearchInput, VideoCard } from "@/components";
 
 const Search = () => {
   const searchValue = useLocalSearchParams().searchValue as string;
-  const { data: posts, fetchData: fetchPosts } = useAppFetch(findPostsByParams, true);
+  const { data: posts, fetchData: fetchPosts } = useAppFetch(() => apiClient.findPostsByParams(searchValue), true);
 
   useEffect(() => {
     fetchPosts(searchValue);
